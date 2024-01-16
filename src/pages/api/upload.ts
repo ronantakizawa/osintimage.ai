@@ -1,0 +1,51 @@
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import axios from 'axios';
+
+
+async function urlToGenerativePart(url: string, mimeType: string) {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: url,
+      responseType: 'arraybuffer'
+    });
+
+    const base64 = Buffer.from(response.data, 'binary').toString('base64');
+    
+    return {
+      inlineData: {
+        data: base64,
+        mimeType
+      },
+    };
+  } catch (error) {
+    console.error('Error fetching or converting image:', error);
+    return null;
+  }
+}
+
+export async function getAIOutput(imageurl:string, apikey:string) {
+  try {
+    const genAI = new GoogleGenerativeAI(apikey);
+    const model = genAI.getGenerativeModel({ model: "gemini-pro-vision" });
+
+    const prompt = "You are an AI specialized in OSINT. List all districts, street addresses, postal codes, and landmarks this photo satisfies in a string array in square brackets.";
+
+    // Await the asynchronous function and handle possible null result
+    const img = await urlToGenerativePart(imageurl, "image/jpeg");
+    if (!img) {
+      console.error('Failed to get image data.');
+      return null;
+    }
+
+    const result = await model.generateContent([prompt, img]);
+    const response = await result.response;
+    const text = await response.text();
+
+    // Instead of just logging, return the text
+    return text;
+  } catch (error) {
+    console.error('Error in getAIOutput:', error);
+    return null; // Return null in case of error
+  }
+}
