@@ -19,8 +19,11 @@ async function urlToGenerativePart(url: string, mimeType: string) {
       },
     };
   } catch (error) {
-    console.error('Error fetching or converting image:', error);
-    return null;
+    if (error instanceof Error) {
+      return error.message;
+    } else {
+      return 'Unknown error occurred'; 
+    }
   }
 }
 
@@ -45,7 +48,10 @@ export async function getAIOutput(imageurl:string, apikey:string) {
     // Instead of just logging, return the text
     return text;
   } catch (error) {
-    console.error('Error in getAIOutput:', error);
-    return null; // Return null in case of error
+    if (error instanceof Error) {
+      return error.message; // Return the error message as a string
+    } else {
+      return 'Unknown error occurred'; // Fallback error message
+    }
   }
 }

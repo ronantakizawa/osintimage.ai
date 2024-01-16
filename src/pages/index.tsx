@@ -47,7 +47,7 @@ function App() {
 
   return (
     <div className="bg-blue-50 min-h-screen flex flex-col items-center py-5">
-      <div className='flex items-center justify-center'>
+      <div className='flex items-center justify-center ml-5'>
       <h1 className="text-4xl font-bold text-blue-700 mb-2 ">osintimage.ai</h1>
       <Image  src="/osintimageai.svg" alt={"logo"} width={40} height={40} className='mr-2'/>
     </div>
@@ -69,7 +69,7 @@ function App() {
        value={apiKey}
        onChange={handleApiKeyChange}
        placeholder="Enter Gemini API Key"
-       className=" p-2 border rounded"
+       className=" p-2 border rounded text-black"
      />
 <p className="text-gray-400 text-[10px] flex justify-end">*osintimage.ai does not store any API keys</p>
  {image && (
@@ -94,10 +94,10 @@ function App() {
           </div>
         )}
 {!isLoading && aiOutput && (
-    <div className="mt-4 p-4 bg-gray-100 rounded">
-      <h3 className="text-lg font-semibold">AI Output:</h3>
-      <p>{aiOutput}</p>
-    </div>
+    <div className="mt-4 p-4 bg-gray-100 rounded break-words">
+    <h3 className="text-lg font-semibold">AI Output:</h3>
+    <p>{aiOutput}</p>
+  </div>
   )}
 </form>
 </div>
