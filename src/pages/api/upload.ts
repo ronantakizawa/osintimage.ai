@@ -10,7 +10,11 @@ async function urlToGenerativePart(url: string, mimeType: string) {
       responseType: 'arraybuffer'
     });
 
+    console.log(response.data);
+
     const base64 = Buffer.from(response.data, 'binary').toString('base64');
+    const byteSize = (base64.length * 3) / 4;
+    console.log(`Base64 byte size: ${byteSize} bytes`);
     
     return {
       inlineData: {

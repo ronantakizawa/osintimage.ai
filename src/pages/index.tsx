@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { getAIOutput } from './api/upload'
 import { ClipLoader } from 'react-spinners';
 import Image from 'next/image';
+import { resizeImage } from './api/utils';
 
 function App() {
   const [image, setImage] = useState<string | null>(null);
@@ -10,18 +11,26 @@ function App() {
   const [error, setError] = useState(''); 
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setError(''); // Reset error message
+  
+
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setError('');
     if (e.target.files && e.target.files[0]) {
-      const img = e.target.files[0];
-      const fileExtension = img.name.split('.').pop()?.toLowerCase();
-      if (fileExtension === 'jpg' || fileExtension === 'png' || fileExtension === 'jpeg') {
-        setImage(URL.createObjectURL(img));
-      } else {
-        setError('Invalid file. Must be jpg/jpeg/png'); // Set error for invalid file format
-      }
+        const img = e.target.files[0];
+        const fileExtension = img.name.split('.').pop()?.toLowerCase();
+        if (fileExtension === 'jpg' || fileExtension === 'png' || fileExtension === 'jpeg') {
+            try {
+                const resizedImageUrl = await resizeImage(img);
+                setImage(resizedImageUrl);
+            } catch (err) {
+                setError('Error resizing image.');
+                console.error(err);
+            }
+        } else {
+            setError('Invalid file. Must be jpg/jpeg/png');
+        }
     }
-  };
+};
 
   const handleApiKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setApiKey(e.target.value);
