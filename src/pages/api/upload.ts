@@ -36,7 +36,7 @@ export async function getAIOutput(imageurl:string, apikey:string) {
     const genAI = new GoogleGenerativeAI(apikey);
     const model = genAI.getGenerativeModel({ model: "gemini-pro-vision" });
 
-    const prompt = "You are an AI specialized in OSINT. List all districts, street addresses, postal codes, and landmarks this photo satisfies in a string array in square brackets.";
+    const prompt = "List all countries, cities, districts, street addresses, postal codes, and landmarks this photo satisfies in a string array in square brackets. If it doesn't satisfy any, return an empty array.";
 
     // Await the asynchronous function and handle possible null result
     const img = await urlToGenerativePart(imageurl, "image/jpeg");
